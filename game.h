@@ -14,8 +14,8 @@
 #define BTN_D (B00000010)
 #define BTN_L (B00000100)
 #define BTN_R (B00001000)
-#define BTN_A (B00010000)
 #define BTN_B (B00100000)
+#define BTN_A (B00010000)
 
 struct GameCore {
   Arduboy arduboy;
