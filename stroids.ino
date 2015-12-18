@@ -205,14 +205,7 @@ void playerStep()
   }
   else
   {
-    for(byte i=0; i<stroidNumber; i++)
-    {
-      if ((stroidActive[i] == true) && (gb.Distance(playerx,playery,stroidX[i],stroidY[i]) < stroidSize[i]))
-      {
-        lives--;
-        playerReset();
-      }
-    }
+    playerCollision();
   }
   ///collisions
 
@@ -220,6 +213,18 @@ void playerStep()
   {
     state = state_menu;
   }
+}
+void playerCollision()
+{
+    for(byte i=0; i<stroidNumber; i++)
+    {
+      if ((stroidActive[i] == true) && (gb.Distance(playerx,playery,stroidX[i],stroidY[i]) < stroidSize[i]))
+      {
+        lives--;
+        playerReset();
+        return;
+      }
+    }
 }
 void playerDraw()
 {
