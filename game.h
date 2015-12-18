@@ -51,12 +51,12 @@ struct GameCore {
     return (nowInput & button) == 0 && (prevInput & button) == 1;
   }
 
-  ///2 functions nicked from GM. they're handyish.
-  float lengthdir_x(float len,float dir)
+  ///functions nicked from gamemaker. they're handyish.
+  float lengthdirX(float len,float dir)
   {
     return(len * cos(dir));
   };
-  float lengthdir_y(float len,float dir)
+  float lengthdirY(float len,float dir)
   {
     return(len * sin(dir));
   };
