@@ -52,16 +52,16 @@ struct GameCore {
   }
 
   ///2 functions nicked from GM. they're handyish.
-  float lengthdir_x(int len,float dir)
+  float lengthdir_x(float len,float dir)
   {
     return(len * cos(dir));
   };
-  float lengthdir_y(int len,float dir)
+  float lengthdir_y(float len,float dir)
   {
     return(len * sin(dir));
   };
 
-  //Found on google
+  //found at http://xoax.net/cpp/ref/cpp_examples/incl/distance_points_plane/
   float Distance(int dX0, int dY0, int dX1, int dY1)
   {
       return sqrt((dX1 - dX0)*(dX1 - dX0) + (dY1 - dY0)*(dY1 - dY0));

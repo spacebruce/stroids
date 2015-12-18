@@ -12,7 +12,7 @@ GameCore gb;
 
 byte state = 0;
 
-int score = 5000;
+int score = 0;
 int lives = 4;
 float playerx;
 float playery;
@@ -30,7 +30,7 @@ byte stary[starNumber];
 float stroidX[stroidNumber];
 float stroidY[stroidNumber];
 byte stroidSize[stroidNumber];
-byte stroidSpeed[stroidNumber];
+float stroidSpeed[stroidNumber];
 byte stroidDir[stroidNumber];
 bool stroidActive[stroidNumber];
 
@@ -46,7 +46,7 @@ void stateIntro()
 {
   gb.clearDisplay();
   gb.setCursor(46,28);
-  gb.print("ARDUBOY1");
+  gb.print("ARDUBOY");
   gb.display();
 //  gb.tunes.tone(987, 160);
   delay(160);
@@ -78,9 +78,9 @@ void stateMenu()
     shotInit();
   }
   
-  gb.fillScreen(0);
+  gb.fillScreen(1);
   gb.setCursor(0,0);
-  gb.print("'Stroids");
+  gb.print("'Stroid2s");
   gb.display();
 };
 
@@ -104,32 +104,39 @@ void backDraw()
 ////'Stroids
 void asteroidInit()
 {
-  const int stroidStartNumber = 4;
+  const int stroidStartNumber = 3;
   for (byte i=0; i<stroidStartNumber; i+=1)
   {
-    stroidX[i] = random(128);
-    stroidY[i] = random(64);
+    stroidX[i] = random(1)*128;
+    stroidY[i] = random(1)*64;
     stroidDir[i] = random(2*pi);
-    stroidSpeed[i] = 1;
+    stroidSpeed[i] = 0.5;
     stroidActive[i] = true;
     stroidSize[i] = 6;
   };
 };
 void asteroidStep()
 {
+  byte numActive = 0;
   for (byte i=0; i<stroidNumber; i+=1)
   {
     if (stroidActive[i])
     {
       stroidX[i] += gb.lengthdir_x(stroidSpeed[i],stroidDir[i]);
       stroidY[i] += gb.lengthdir_y(stroidSpeed[i],stroidDir[i]);
-    
+
       if (stroidX[i]>128)  stroidX[i] = 0;
       if (stroidX[i]<0)    stroidX[i] = 128;
       if (stroidY[i]>64)   stroidY[i] = 0;
       if (stroidY[i]<0)    stroidY[i] = 64;
+      numActive++;
     }
   };
+
+  if (numActive==0)
+  {
+    asteroidInit();
+  }
 };
 void asteroidDraw()
 {
@@ -138,14 +145,12 @@ void asteroidDraw()
     if (stroidActive[i])
       gb.drawCircle(stroidX[i],stroidY[i],stroidSize[i],1);
   };
-
 }
-
 ////player
 void playerInit()
 {
-  score = 12345;
-  lives = 4;
+  score = 0;
+  lives = 5;
   playerReset();
 }
 void playerReset()
@@ -153,39 +158,68 @@ void playerReset()
   playerx = 64;
   playery = 32;
   playerdir = pi*1.5;
-  playerBlink = 120;
+  playerBlink = 120;  //2 seconds of invuln.
 }
 void playerStep()
 {
+  
   if (gb.pressed(BTN_L))
   {
-    playerdir -= 0.3;
+    playerdir -= 0.15;
   };
   if (gb.pressed(BTN_R))
   {
-    playerdir += 0.3;
+    playerdir += 0.15;
   };
   if (gb.pressed(BTN_U))
   {
-    int speed = 3;
+    int speed = 1.5;
     playerx += gb.lengthdir_x(speed,playerdir);
     playery += gb.lengthdir_y(speed,playerdir);
+
+    //modulo is for losers
+    if (playerx>128)  playerx = 0;
+    if (playerx<0)    playerx = 128;
+    if (playery>64)   playery = 0;
+    if (playery<0)    playery = 64;
   }
-  
-  //modulo is for losers
-  if (playerx>128)  playerx = 0;
-  if (playerx<0)    playerx = 128;
-  if (playery>64)   playery = 0;
-  if (playery<0)    playery = 64;
+  if (gb.pushed(BTN_D))
+  {
+    playerx = random(128);
+    playery = random(64);
+  }
 
   //shoots
   if (gb.pushed(BTN_A))
   {
     shotAdd(playerx,playery,playerdir);
   }
-  //other stuff
+  
+  if (gb.pushed(BTN_B))
+    lives--;
+    
+  //collision/invincible checks
   if (playerBlink > 0)
+  {
     playerBlink--;
+  }
+  else
+  {
+    for(byte i=0; i<stroidNumber; i++)
+    {
+      if ((stroidActive[i] == true) && (gb.Distance(playerx,playery,stroidX[i],stroidY[i]) < stroidSize[i]))
+      {
+        lives--;
+        playerReset();
+      }
+    }
+  }
+  ///collisions
+
+  if (lives == 0)
+  {
+    state = state_menu;
+  }
 }
 void playerDraw()
 {
@@ -273,6 +307,8 @@ void shotAsteroid()
           shotActive[s] = false;
           stroidActive[a] = false;
 
+          score += stroidSize[a]*100;
+
           int msize = stroidSize[a]-2;
           if (msize != 0)
           {
@@ -309,8 +345,8 @@ void shotAsteroid()
 
 void hudDraw()
 {
-  gb.fillRect(128-(min(lives,8)*8),56,128,64,0);
-  for(byte i=0; i<=(min(lives,8)); i++)
+  gb.fillRect(128-(min(lives-1,8)*8),56,128,64,0);
+  for(byte i=0; i<=(min(lives-1,8)); i++)
   {
     gb.drawBitmap(128-(i*8),56,sprLives,1);
   };
@@ -319,9 +355,14 @@ void hudDraw()
   char hud[10];
   gb.printf("%s",hud,score);
   */
+  char text[8];
+  
+  gb.setCursor(0,0);
+  sprintf(text, "%03dCPU", gb.cpuLoad());
+  gb.print(text);
+  
   gb.setCursor(0,56);
-  char text[12];
-  sprintf(text, "%08d", gb.cpuLoad());
+  sprintf(text, "%08d", score);
   gb.print(text);
 };
 
