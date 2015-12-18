@@ -9,3 +9,16 @@ LEFT/RIGHT to aim
 DOWN to warp
 B(left) to pause/unpause
 A(right) to shoot
+
+
+To-do list :
+
+Improve : 
+'Stroid graphics
+Scoring methods
+
+Add :
+Player momentum
+Highscore table
+Killscreen
+Logo/Menu

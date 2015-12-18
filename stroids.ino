@@ -104,7 +104,8 @@ void backDraw()
 void asteroidInit()
 {
   const int stroidStartNumber = 3;  //how many to start each round with
-  for (byte i=0; i<stroidStartNumber; i+=1)
+  byte i;
+  for (i=0; i<stroidStartNumber; i+=1)
   {
     stroidX[i] = random(1)*128;
     stroidY[i] = random(1)*64;
@@ -113,6 +114,10 @@ void asteroidInit()
     stroidActive[i] = true;
     stroidSize[i] = 6;
   };
+  for(i; i<stroidNumber; i++) //deactivates rest
+  {
+    stroidActive[i] = false;
+  }
 };
 void asteroidStep()
 {
