@@ -310,7 +310,7 @@ void shotAsteroid()
     {
       for(byte a=0; a<stroidNumber; a++)
       {
-        if ((stroidActive[a] == true) && (gb.Distance(shotX[s],shotY[s],stroidX[a],stroidY[a]) < stroidSize[a]))
+        if ((stroidActive[a] == true) && ((gb.Distance(shotX[s],shotY[s],stroidX[a],stroidY[a])) <= stroidSize[a]))
         {
           shotActive[s] = false;
           stroidActive[a] = false;
