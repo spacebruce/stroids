@@ -20,28 +20,33 @@ float playerdir;
 int playersize = 4;
 int playerBlink = 0;
 
-byte starx[32];
-byte stary[32];
+byte nothing=0; //wow
 
-byte stroidNumber = 4;
-float stroidx[32];
-float stroidy[32];
-byte stroidSpeed[32];
-byte stroidDir[32];
+#define starNumber 32
+byte starx[starNumber];
+byte stary[starNumber];
 
-#define maxShots 16
+#define stroidNumber 32
+float stroidX[stroidNumber];
+float stroidY[stroidNumber];
+byte stroidSize[stroidNumber];
+byte stroidSpeed[stroidNumber];
+byte stroidDir[stroidNumber];
+bool stroidActive[stroidNumber];
+
+#define shotNumber 8
 #define shotSpeed 4
-int shotX[16];
-int shotY[16];
-float shotDir[16];
-bool shotActive[16];
+int shotX[shotNumber];
+int shotY[shotNumber];
+float shotDir[shotNumber];
+bool shotActive[shotNumber];
 
 /////Intro
 void stateIntro()
 {
   gb.clearDisplay();
   gb.setCursor(46,28);
-  gb.print("ARDUBOY");
+  gb.print("ARDUBOY1");
   gb.display();
 //  gb.tunes.tone(987, 160);
   delay(160);
@@ -75,7 +80,7 @@ void stateMenu()
   
   gb.fillScreen(0);
   gb.setCursor(0,0);
-  gb.print("'ojhgjfhgf");
+  gb.print("'Stroids");
   gb.display();
 };
 
@@ -95,40 +100,47 @@ void backDraw()
     gb.drawPixel(starx[i],stary[i],1);
   };
 };
+
 ////'Stroids
 void asteroidInit()
 {
-  stroidNumber = 4;
-  for (byte i=0; i<stroidNumber; i+=1)
+  const int stroidStartNumber = 4;
+  for (byte i=0; i<stroidStartNumber; i+=1)
   {
-    stroidx[i] = random(128);
-    stroidy[i] = random(64);
+    stroidX[i] = random(128);
+    stroidY[i] = random(64);
     stroidDir[i] = random(2*pi);
     stroidSpeed[i] = 1;
+    stroidActive[i] = true;
+    stroidSize[i] = 6;
   };
 };
 void asteroidStep()
 {
   for (byte i=0; i<stroidNumber; i+=1)
   {
-    stroidx[i] += gb.lengthdir_x(stroidSpeed[i],stroidDir[i]);
-    stroidy[i] += gb.lengthdir_y(stroidSpeed[i],stroidDir[i]);
-  
-    if (stroidx[i]>128)  stroidx[i] = 0;
-    if (stroidx[i]<0)    stroidx[i] = 128;
-    if (stroidy[i]>64)   stroidy[i] = 0;
-    if (stroidy[i]<0)    stroidy[i] = 64;
+    if (stroidActive[i])
+    {
+      stroidX[i] += gb.lengthdir_x(stroidSpeed[i],stroidDir[i]);
+      stroidY[i] += gb.lengthdir_y(stroidSpeed[i],stroidDir[i]);
+    
+      if (stroidX[i]>128)  stroidX[i] = 0;
+      if (stroidX[i]<0)    stroidX[i] = 128;
+      if (stroidY[i]>64)   stroidY[i] = 0;
+      if (stroidY[i]<0)    stroidY[i] = 64;
+    }
   };
 };
-
 void asteroidDraw()
 {
   for (byte i=0; i<stroidNumber; i+=1)
   {
-    gb.drawCircle(stroidx[i],stroidy[i],8,1);
+    if (stroidActive[i])
+      gb.drawCircle(stroidX[i],stroidY[i],stroidSize[i],1);
   };
 
 }
+
 ////player
 void playerInit()
 {
@@ -188,13 +200,6 @@ void playerDraw()
     x3 = playerx + gb.lengthdir_x(playersize,(pd+pi)-(0.3*pi));
     y3 = playery + gb.lengthdir_y(playersize,(pd+pi)-(0.3*pi));
   
-    //if(graphics.filled)
-    if (false)
-    {
-      gb.drawTriangle(x1,y1,x2,y2,playerx,playery,0);
-      gb.drawTriangle(x1,y1,x3,y3,playerx,playery,0);
-    };
-    
     gb.drawLine(x1,y1,x2,y2,1);
     gb.drawLine(x1,y1,x3,y3,1);
   
@@ -205,7 +210,7 @@ void playerDraw()
 ////shooting
 void shotInit()
 {
-  for(byte i=0; i<maxShots; i++)
+  for(byte i=0; i<shotNumber; i++)
   {
     shotX[i] = 0;
     shotY[i] = 0;
@@ -215,7 +220,7 @@ void shotInit()
 }
 void shotStep()
 {
-  for (byte i=0; i<maxShots; i++)
+  for (byte i=0; i<shotNumber; i++)
   {
     if (shotActive[i])
     {
@@ -228,11 +233,10 @@ void shotStep()
       }
     }
 };
-
 }
 void shotDraw()
 {
-  for(byte i=0; i<maxShots; i++)
+  for(byte i=0; i<shotNumber; i++)
   {
     if (shotActive[i])
     {
@@ -242,7 +246,7 @@ void shotDraw()
 }
 bool shotAdd(int x,int y,float dir)
 {
-  for(byte i=0; i<maxShots; i++)
+  for(byte i=0; i<shotNumber; i++)
   {
     if (shotActive[i] == false)
     {
@@ -254,6 +258,53 @@ bool shotAdd(int x,int y,float dir)
     }
   }
   return false;
+}
+
+void shotAsteroid()
+{
+  for(byte s=0; s<shotNumber; s++)
+  {
+    if (shotActive[s] == true)
+    {
+      for(byte a=0; a<stroidNumber; a++)
+      {
+        if ((stroidActive[a] == true) && (gb.Distance(shotX[s],shotY[s],stroidX[a],stroidY[a]) < stroidSize[a]))
+        {
+          shotActive[s] = false;
+          stroidActive[a] = false;
+
+          int msize = stroidSize[a]-2;
+          if (msize != 0)
+          {
+            bool done=false;
+            byte num = 2;
+            float dir = random(pi);
+            byte m=0;
+            while(!done)
+            {
+              if(stroidActive[m] == false)
+              {
+                stroidActive[m] = true;
+                stroidX[m] = stroidX[a]-msize;
+                stroidY[m] = stroidY[a];
+                stroidSize[m] = msize;
+                stroidSpeed[m] = stroidSpeed[a];
+                stroidDir[m] = dir+(num*pi);
+                num--;
+              }
+              m++;
+              
+              if ((num == 0) or (m>32))
+              {
+                done = true;
+              }
+            }
+            return;
+          }
+        }
+      }
+    }
+  }
 }
 
 void hudDraw()
@@ -270,7 +321,7 @@ void hudDraw()
   */
   gb.setCursor(0,56);
   char text[12];
-  sprintf(text, "%08d", score);
+  sprintf(text, "%08d", gb.cpuLoad());
   gb.print(text);
 };
 
@@ -280,11 +331,11 @@ void stateGame()
   shotStep();
   playerStep();
   asteroidStep();
+  shotAsteroid();
   
   gb.fillScreen(0);
 
   backDraw();
-  
   asteroidDraw();
   playerDraw();
   shotDraw();

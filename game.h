@@ -61,11 +61,16 @@ struct GameCore {
     return(len * sin(dir));
   };
 
+  //Found on google
+  float Distance(int dX0, int dY0, int dX1, int dY1)
+  {
+      return sqrt((dX1 - dX0)*(dX1 - dX0) + (dY1 - dY0)*(dY1 - dY0));
+  }
 
   ///delegation time!
-  inline bool nextFrame() { return arduboy.nextFrame(); }
-  inline bool clearDisplay()  { arduboy.clearDisplay(); }
   inline int cpuLoad()  { return arduboy.cpuLoad(); }
+  inline bool nextFrame() { return arduboy.nextFrame(); }
+  inline void clearDisplay()  { arduboy.clearDisplay(); }
   inline void fillScreen( byte c )  { arduboy.fillScreen(c); }
   inline void display() { arduboy.display(); }
   inline int frameCount() { return arduboy.frameCount; }
