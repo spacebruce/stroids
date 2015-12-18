@@ -80,6 +80,9 @@ struct GameCore {
   inline void drawBitmap(int x, int y, const byte* bitmap, byte c) {
     arduboy.drawBitmap(x + qx, y + qy, bitmap+2, pgm_read_byte(bitmap), pgm_read_byte(bitmap+1), c);
   }
+  inline void drawBitmapSlow(int x,int y,const byte* bitmap, byte c) {
+    arduboy.drawSlowXYBitmap(x + qx, y + qy, bitmap+2, pgm_read_byte(bitmap), pgm_read_byte(bitmap+1), c);
+  }
   inline void drawTriangle(int x0,int y0,int x1,int y1,int x2,int y2,uint8_t color) { arduboy.fillTriangle (x0,y0,x1,y1,x2,y2,color); }
   inline void fillRect(int x, int y, int w, int h, byte c) {
     arduboy.fillRect(x + qx, y + qy, w, h, c);

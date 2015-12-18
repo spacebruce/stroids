@@ -12,13 +12,14 @@ GameCore gb;
 
 byte state = 0;
 
-int score = 0;
+unsigned long highscore = 0;
+unsigned long score = 0;
 int lives = 4;
 float playerX;
 float playerY;
 float playerdir;
-int playersize = 4;
-int playerBlink = 0;
+byte playersize = 4;
+byte playerBlink = 0;
 
 byte nothing=0; //wow
 
@@ -77,9 +78,16 @@ void stateMenu()
     asteroidInit();
     shotInit();
   }
-  gb.fillScreen(1);
-  gb.setCursor(0,0);
-  gb.print("'Stroids");
+  gb.fillScreen(0);
+  gb.fillRect(0,0,128,32,1);
+  gb.drawBitmapSlow(0,0,sprLogo,0);
+
+  ///top score
+  char text[24];
+  gb.setCursor(4,56);
+  sprintf(text, "TOP SCORE : %08lu", highscore); //sprintf is weird.
+  gb.print(text);
+  
   gb.display();
 };
 
@@ -216,6 +224,10 @@ void playerStep()
   if (lives == 0)
   {
     state = state_menu;
+    if (score>highscore)
+    {
+      highscore = score;
+    }
   }
 }
 void playerCollision()
