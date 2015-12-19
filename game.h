@@ -34,13 +34,7 @@ class GameCore : public Arduboy {
 
   void updateInput() {
     prevInput = nowInput;
-    nowInput  = 0;
-    if(this->pressed(UP_BUTTON   )) { nowInput |= BTN_U; }
-    if(this->pressed(DOWN_BUTTON )) { nowInput |= BTN_D; }
-    if(this->pressed(LEFT_BUTTON )) { nowInput |= BTN_L; }
-    if(this->pressed(RIGHT_BUTTON)) { nowInput |= BTN_R; }
-    if(this->pressed(A_BUTTON    )) { nowInput |= BTN_A; }
-    if(this->pressed(B_BUTTON    )) { nowInput |= BTN_B; }
+    nowInput  = this->getInput();
   }
   
   bool pressed(byte button) const {
