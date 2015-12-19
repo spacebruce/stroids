@@ -5,12 +5,15 @@
 GameCore gb;
 
 /////State 
-#define state_title 0
-#define state_menu 1
-#define state_game 2
-#define state_pause 3
+enum class State : char
+{
+  Title = 0,
+  Menu = 1,
+  Game = 2,
+  Pause = 3
+};
 
-byte state = 0;
+State state = State::Title;
 
 unsigned long highscore = 0;
 unsigned long score = 0;
@@ -53,7 +56,7 @@ void stateIntro()
   delay(160);
 //  gb.tunes.tone(1318, 400);
   delay(2000);
-  initMenu(); state = state_menu;
+  initMenu(); state = State::Menu;
 }
 
 /////Menu
@@ -72,7 +75,7 @@ void stateMenu()
   //simple placeholder for the moment
   if (gb.pushed(BTN_A))
   {
-    state = state_game;
+    state = State::Game;
     playerInit();
     backInit();
     asteroidInit();
@@ -223,7 +226,7 @@ void playerStep()
 
   if (lives == 0)
   {
-    state = state_menu;
+    state = State::Menu;
     if (score>highscore)
     {
       highscore = score;
@@ -397,7 +400,7 @@ void stateGame()
 {
   if (gb.pushed(BTN_A))
   {
-    state = state_pause;
+    state = State::Pause;
   }
   shotStep();
   playerStep();
@@ -421,7 +424,7 @@ void statePause()
 {
   if (gb.pushed(BTN_A))
   {
-    state = state_game;
+    state = State::Game;
   }
   stateGameDraw();
   
@@ -447,9 +450,9 @@ void loop()
   
   switch(state)
   {
-    case state_title: { stateIntro();}; break;
-    case state_menu:  { stateMenu(); }; break;
-    case state_game:  { stateGame(); }; break;
-    case state_pause: { statePause(); }; break;
+    case State::Title: { stateIntro();}; break;
+    case State::Menu:  { stateMenu(); }; break;
+    case State::Game:  { stateGame(); }; break;
+    case State::Pause: { statePause(); }; break;
   }
 }
