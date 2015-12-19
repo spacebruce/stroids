@@ -1,11 +1,6 @@
 #pragma once
 #include "Arduboy.h"
-
-
-#define pi 3.14
-#define todeg (180/pi)
-#define torad (6.28319)
-//#include "constants.h"
+#include "maths.h"
 
 #define SCREEN_WIDTH  (WIDTH)
 #define SCREEN_HEIGHT (HEIGHT)
