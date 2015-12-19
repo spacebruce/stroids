@@ -1,29 +1,32 @@
 #'stroids
-simple Asteroids clone for the Arduboy
+A simple Asteroids clone for the Arduboy.
 
-- !Actung!
-- Triggers the bootloader USB bug! Not my fault! Honest!
-To write another game over this one, hold left+up while booting or connect pin 2 to pin 6! 
-- !Actung!
+## !Actung!
+**Triggers the bootloader USB bug! (Not my fault! Honest!)
+To write another game over this one, hold left+up while booting or connect pin 2 to pin 6!**
 
-if you want to run it at a decent framerate, use my fork of the arduboy library or replace your Arduboy.cpp fillScreen() function with mine.
+## Sidenote
 
-Controls : 
-UP to move (no acceleration yet)
-LEFT/RIGHT to aim
-DOWN to warp
-B(left) to pause/unpause
-A(right) to shoot
+If you want to run it at a decent framerate, use my fork of the arduboy library or replace your Arduboy.cpp fillScreen() function with mine.
 
+## Controls
 
-To-do list :
+| **Button** | **Action** |
+|------------|------------|
+| UP | Move |
+| LEFT/RIGHT | Aim |
+| DOWN | Warp |
+| B (Left) | Pause & Unpause |
+| A (Right) | Shoot |
 
-Improve : 
-'Stroid graphics,
-Scoring methods,
+(Think Gameboy layout)
 
-Add :
-Player momentum,
-Highscore table,
-Killscreen,
-Logo/Menu
+## Todo List
+
+[ ] Improve graphics
+[ ] Improve scoring mechanics
+[ ] Add player momentum
+[ ] Add highscore table
+[ ] Add killscreen
+[ ] Add Logo
+[ ] Add Menu
