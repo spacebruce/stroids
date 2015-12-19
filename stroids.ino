@@ -47,7 +47,7 @@ void stateIntro()
 {
   gb.clearDisplay();
   gb.setCursor(46,28);
-  gb.print("ARDUBOY");
+  gb.print("WHAT");
   gb.display();
 //  gb.tunes.tone(987, 160);
   delay(160);
@@ -382,11 +382,11 @@ void hudDraw()
   gb.printf("%s",hud,score);
   */
   char text[8];
-  /*
+  
   gb.setCursor(0,0);
   sprintf(text, "%03dCPU", gb.cpuLoad());
   gb.print(text);
-  */
+  
   gb.setCursor(0,56);
   sprintf(text, "%08d", score); //sprintf is weird.
   gb.print(text);
