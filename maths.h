@@ -1,5 +1,5 @@
 #pragma once
 
 #define pi 3.14
-#define todeg (180/pi)
-#define torad (6.28319)
+#define todeg (57.295779) // full: 57.295779513082320876798154814105
+#define torad (0.017453) // full: 0.01745329251994329576923690768489
