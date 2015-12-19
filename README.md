@@ -23,10 +23,10 @@ If you want to run it at a decent framerate, use my fork of the arduboy library 
 
 ## Todo List
 
-[ ] Improve graphics
-[ ] Improve scoring mechanics
-[ ] Add player momentum
-[ ] Add highscore table
-[ ] Add killscreen
-[ ] Add Logo
-[ ] Add Menu
+- [ ] Improve graphics
+- [ ] Improve scoring mechanics
+- [ ] Add player momentum
+- [ ] Add highscore table
+- [ ] Add killscreen
+- [ ] Add Logo
+- [ ] Add Menu
