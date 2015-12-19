@@ -1,5 +1,5 @@
 #pragma once
-#include "Arduboy.h"
+#include "this->h"
 
 
 #define pi 3.14
@@ -17,28 +17,24 @@
 #define BTN_B (B00100000)
 #define BTN_A (B00010000)
 
-struct GameCore {
-  Arduboy arduboy;
+class GameCore : public Arduboy {
+  private:
   byte    nowInput;
   byte    prevInput;
+  
+  public:
   char    qx,qy;
     
   void setup() {
-    arduboy.setup();
-    arduboy.setFrameRate(60);
+    this->setup();
+    this->setFrameRate(60);
     nowInput  = 0x00;
     prevInput = 0xff;
   }
 
   void updateInput() {
     prevInput = nowInput;
-    nowInput  = 0;
-    if(arduboy.pressed(UP_BUTTON   )) { nowInput |= BTN_U; }
-    if(arduboy.pressed(DOWN_BUTTON )) { nowInput |= BTN_D; }
-    if(arduboy.pressed(LEFT_BUTTON )) { nowInput |= BTN_L; }
-    if(arduboy.pressed(RIGHT_BUTTON)) { nowInput |= BTN_R; }
-    if(arduboy.pressed(A_BUTTON    )) { nowInput |= BTN_A; }
-    if(arduboy.pressed(B_BUTTON    )) { nowInput |= BTN_B; }
+    nowInput  = this->getInput();
   }
   
   bool pressed(byte button) const {
@@ -67,30 +63,19 @@ struct GameCore {
       return sqrt((dX1 - dX0)*(dX1 - dX0) + (dY1 - dY0)*(dY1 - dY0));
   }
 
-  ///delegation time!
-  inline int cpuLoad()  { return arduboy.cpuLoad(); }
-  inline bool nextFrame() { return arduboy.nextFrame(); }
-  inline void clearDisplay()  { arduboy.clearDisplay(); }
-  inline void fillScreen( byte c )  { arduboy.fillScreen(c); }
-  inline void display() { arduboy.display(); }
-  inline int frameCount() { return arduboy.frameCount; }
   //draws
-  inline void drawPixel(int x, int y, byte c) { arduboy.drawPixel(x + qx, y + qy, c); }
-  inline void drawLine(int x0, int y0, int x1, int y1, uint8_t c)  { arduboy.drawLine(x0,y0,x1,y1,c); }
-  inline void drawBitmap(int x, int y, const byte* bitmap, byte c) {
-    arduboy.drawBitmap(x + qx, y + qy, bitmap+2, pgm_read_byte(bitmap), pgm_read_byte(bitmap+1), c);
+  inline void drawPixelOffset(int x, int y, byte c) { this->drawPixel(x + qx, y + qy, c); }
+  inline void drawBitmapOffset(int x, int y, const byte* bitmap, byte c) {
+    this->drawBitmap(x + qx, y + qy, bitmap+2, pgm_read_byte(bitmap), pgm_read_byte(bitmap+1), c);
   }
-  inline void drawBitmapSlow(int x,int y,const byte* bitmap, byte c) {
-    arduboy.drawSlowXYBitmap(x + qx, y + qy, bitmap+2, pgm_read_byte(bitmap), pgm_read_byte(bitmap+1), c);
+  inline void drawBitmapSlowOffset(int x,int y,const byte* bitmap, byte c) {
+    this->drawSlowXYBitmap(x + qx, y + qy, bitmap+2, pgm_read_byte(bitmap), pgm_read_byte(bitmap+1), c);
   }
-  inline void drawTriangle(int x0,int y0,int x1,int y1,int x2,int y2,uint8_t color) { arduboy.fillTriangle (x0,y0,x1,y1,x2,y2,color); }
-  inline void fillRect(int x, int y, int w, int h, byte c) {
-    arduboy.fillRect(x + qx, y + qy, w, h, c);
+  inline void fillRectOffset(int x, int y, int w, int h, byte c) {
+    this->fillRect(x + qx, y + qy, w, h, c);
   }
-  inline void drawCircle(int x, int y, int r, byte c) {
-    arduboy.drawCircle(x + qx, y + qy, r, c);
+  inline void drawCircleOffset(int x, int y, int r, byte c) {
+    this->drawCircle(x + qx, y + qy, r, c);
   }
-  inline void setCursor(int x, int y) { arduboy.setCursor(x, y); }
-  inline void print(char* text) { arduboy.print(text); }
 };
 
