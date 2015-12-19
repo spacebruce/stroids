@@ -17,7 +17,7 @@
 #define BTN_B (B00100000)
 #define BTN_A (B00010000)
 
-struct GameCore {
+class GameCore {
   Arduboy arduboy;
   byte    nowInput;
   byte    prevInput;
