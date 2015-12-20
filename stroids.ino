@@ -365,15 +365,15 @@ void shotAsteroid()
           {
             bool done=false;
             byte num = 2; //makes 2 chunks
-            float dir = random(pi); //fly in random directions
+            float dir = shotDir[s] + pi;
             byte m=0;
             while(!done)  //loops searching for free asteroid slots
             {
               if(stroidActive[m] == false)
               {
                 stroidActive[m] = true;
-                stroidX[m] = stroidX[a]-msize;
-                stroidY[m] = stroidY[a];
+                stroidX[m] = stroidX[a]+gb.lengthdirX(msize,dir);
+                stroidY[m] = stroidY[a]+gb.lengthdirY(msize,dir);
                 stroidSize[m] = msize;
                 stroidSpeed[m] = stroidSpeed[a];
                 stroidDir[m] = dir+(num*pi);
@@ -386,7 +386,6 @@ void shotAsteroid()
                 done = true;
               }
             }
-            return;
           }
         }
       }
@@ -458,7 +457,6 @@ void statePause()
   }
   gb.display();
 }
-
 
 ///the good bits
 void setup()
