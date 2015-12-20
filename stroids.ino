@@ -5,7 +5,6 @@
 GameCore gb;
 
 /////State 
-/*
 enum class State : char
 {
   Title = 0,
@@ -14,12 +13,6 @@ enum class State : char
   Pause = 3
 };
 State state = State::Title;
-*/
-#define state_Title 0
-#define state_Menu 1
-#define state_Game 2
-#define state_Pause 3
-byte state = state_Title;
 
 unsigned long highscore = 0;
 unsigned long score = 0;
@@ -52,28 +45,28 @@ float shotDir[shotNumber];
 bool shotActive[shotNumber];
 
 // Declare Functions
-void stateIntro()
-void initMenu()
-void stateMenu()
-void backInit()
-void asteroidInit()
-void asteroidStep()
-void asteroidDraw()
-void playerInit()
-void playerReset()
-void playerStep()
-void playerCollision()
-void playerDraw()
-void shotInit()
-void shotDraw()
-bool shotAdd(int x,int y,float dir)
-void shotAsteroid()
-void hudDraw()
-void stateGame()
-void stateGameDraw()
-void statePause()
-void setup()
-void loop()
+void stateIntro();
+void initMenu();
+void stateMenu();
+void backInit();
+void asteroidInit();
+void asteroidStep();
+void asteroidDraw();
+void playerInit();
+void playerReset();
+void playerStep();
+void playerCollision();
+void playerDraw();
+void shotInit();
+void shotDraw();
+bool shotAdd(int x,int y,float dir);
+void shotAsteroid();
+void hudDraw();
+void stateGame();
+void stateGameDraw();
+void statePause();
+void setup();
+void loop();
 
 /////Intro
 void stateIntro()
@@ -86,7 +79,7 @@ void stateIntro()
   delay(160);
 //  gb.tunes.tone(1318, 400);
   delay(2000);
-  initMenu(); state = state_Menu;
+  initMenu(); state = State::Menu;
 }
 
 /////Menu
@@ -105,7 +98,7 @@ void stateMenu()
   //simple placeholder for the moment
   if (gb.pushed(BTN_A))
   {
-    state = state_Game;
+    state = State::Game;
     playerInit();
     backInit();
     asteroidInit();
@@ -256,7 +249,7 @@ void playerStep()
 
   if (lives == 0)
   {
-    state = state_Menu;  //to-do : go to gameover screen
+    state = State::Menu;  //to-do : go to gameover screen
     if (score>highscore)
     {
       highscore = score;
@@ -430,7 +423,7 @@ void stateGame()
 {
   if (gb.pushed(BTN_A))
   {
-    state = state_Pause;
+    state = State::Pause;
   }
   shotStep();
   playerStep();
@@ -454,7 +447,7 @@ void statePause()
 {
   if (gb.pushed(BTN_A))
   {
-    state = state_Game;
+    state = State::Game;
   }
   stateGameDraw();
   
@@ -480,9 +473,9 @@ void loop()
   
   switch(state)
   {
-    case state_Title: { stateIntro();}; break;
-    case state_Menu:  { stateMenu(); }; break;
-    case state_Game:  { stateGame(); }; break;
-    case state_Pause: { statePause(); }; break;
+    case State::Title: { stateIntro();}; break;
+    case State::Menu:  { stateMenu(); }; break;
+    case State::Game:  { stateGame(); }; break;
+    case State::Pause: { statePause(); }; break;
   }
 }
