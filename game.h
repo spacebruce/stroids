@@ -6,12 +6,12 @@
 #define SCREEN_WIDTH  (WIDTH)
 #define SCREEN_HEIGHT (HEIGHT)
 
-#define BTN_U (UP_BUTTON)
-#define BTN_D (DOWN_BUTTON)
-#define BTN_L (LEFT_BUTTON)
-#define BTN_R (RIGHT_BUTTON)
-#define BTN_B (B_BUTTON)
-#define BTN_A (A_BUTTON)
+#define BTN_U (UP_BUTTON_BV)
+#define BTN_D (DOWN_BUTTON_BV)
+#define BTN_L (LEFT_BUTTON_BV)
+#define BTN_R (RIGHT_BUTTON_BV)
+#define BTN_B (B_BUTTON_BV)
+#define BTN_A (A_BUTTON_BV)
 
 struct GameCore {
   Arduboy arduboy;
