@@ -1,7 +1,7 @@
 #'stroids
 A simple Asteroids clone for the Arduboy.
 
-## !Actung!
+## !Achtung!
 **Triggers the bootloader USB bug! (Not my fault! Honest!)
 To write another game over this one, hold left+up while booting or connect pin 2 to pin 6!**
 

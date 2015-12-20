@@ -5,6 +5,7 @@
 GameCore gb;
 
 /////State 
+/*
 enum class State : char
 {
   Title = 0,
@@ -12,8 +13,13 @@ enum class State : char
   Game = 2,
   Pause = 3
 };
-
 State state = State::Title;
+*/
+#define state_Title 0
+#define state_Menu 1
+#define state_Game 2
+#define state_Pause 3
+byte state = state_Title;
 
 unsigned long highscore = 0;
 unsigned long score = 0;
@@ -50,13 +56,13 @@ void stateIntro()
 {
   gb.clearDisplay();
   gb.setCursor(46,28);
-  gb.print("WHAT");
+  gb.print("ARDUBOY");
   gb.display();
 //  gb.tunes.tone(987, 160);
   delay(160);
 //  gb.tunes.tone(1318, 400);
   delay(2000);
-  initMenu(); state = State::Menu;
+  initMenu(); state = state_Menu;
 }
 
 /////Menu
@@ -75,7 +81,7 @@ void stateMenu()
   //simple placeholder for the moment
   if (gb.pushed(BTN_A))
   {
-    state = State::Game;
+    state = state_Game;
     playerInit();
     backInit();
     asteroidInit();
@@ -226,7 +232,7 @@ void playerStep()
 
   if (lives == 0)
   {
-    state = State::Menu;
+    state = state_Menu;  //to-do : go to gameover screen
     if (score>highscore)
     {
       highscore = score;
@@ -391,7 +397,7 @@ void hudDraw()
   gb.print(text);
   
   gb.setCursor(0,56);
-  sprintf(text, "%08d", score); //sprintf is weird.
+  sprintf(text, "%08lu", score); //sprintf is weird.
   gb.print(text);
 };
 
@@ -400,7 +406,7 @@ void stateGame()
 {
   if (gb.pushed(BTN_A))
   {
-    state = State::Pause;
+    state = state_Pause;
   }
   shotStep();
   playerStep();
@@ -424,7 +430,7 @@ void statePause()
 {
   if (gb.pushed(BTN_A))
   {
-    state = State::Game;
+    state = state_Game;
   }
   stateGameDraw();
   
@@ -450,9 +456,9 @@ void loop()
   
   switch(state)
   {
-    case State::Title: { stateIntro();}; break;
-    case State::Menu:  { stateMenu(); }; break;
-    case State::Game:  { stateGame(); }; break;
-    case State::Pause: { statePause(); }; break;
+    case state_Title: { stateIntro();}; break;
+    case state_Menu:  { stateMenu(); }; break;
+    case state_Game:  { stateGame(); }; break;
+    case state_Pause: { statePause(); }; break;
   }
 }
