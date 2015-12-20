@@ -42,6 +42,30 @@ int shotY[shotNumber];
 float shotDir[shotNumber];
 bool shotActive[shotNumber];
 
+// Declare Functions
+void stateIntro()
+void initMenu()
+void stateMenu()
+void backInit()
+void asteroidInit()
+void asteroidStep()
+void asteroidDraw()
+void playerInit()
+void playerReset()
+void playerStep()
+void playerCollision()
+void playerDraw()
+void shotInit()
+void shotDraw()
+bool shotAdd(int x,int y,float dir)
+void shotAsteroid()
+void hudDraw()
+void stateGame()
+void stateGameDraw()
+void statePause()
+void setup()
+void loop()
+
 /////Intro
 void stateIntro()
 {
