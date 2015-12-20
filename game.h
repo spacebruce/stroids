@@ -1,16 +1,17 @@
 #pragma once
+#include "core.h"
 #include "Arduboy.h"
 #include "maths.h"
 
 #define SCREEN_WIDTH  (WIDTH)
 #define SCREEN_HEIGHT (HEIGHT)
 
-#define BTN_U (B00000001)
-#define BTN_D (B00000010)
-#define BTN_L (B00000100)
-#define BTN_R (B00001000)
-#define BTN_B (B00100000)
-#define BTN_A (B00010000)
+#define BTN_U (UP_BUTTON_BV)
+#define BTN_D (DOWN_BUTTON_BV)
+#define BTN_L (LEFT_BUTTON_BV)
+#define BTN_R (RIGHT_BUTTON_BV)
+#define BTN_B (B_BUTTON_BV)
+#define BTN_A (A_BUTTON_BV)
 
 struct GameCore {
   Arduboy arduboy;
@@ -27,13 +28,7 @@ struct GameCore {
 
   void updateInput() {
     prevInput = nowInput;
-    nowInput  = 0;
-    if(arduboy.pressed(UP_BUTTON   )) { nowInput |= BTN_U; }
-    if(arduboy.pressed(DOWN_BUTTON )) { nowInput |= BTN_D; }
-    if(arduboy.pressed(LEFT_BUTTON )) { nowInput |= BTN_L; }
-    if(arduboy.pressed(RIGHT_BUTTON)) { nowInput |= BTN_R; }
-    if(arduboy.pressed(A_BUTTON    )) { nowInput |= BTN_A; }
-    if(arduboy.pressed(B_BUTTON    )) { nowInput |= BTN_B; }
+    nowInput  = arduboy.getInput();
   }
   
   bool pressed(byte button) const {
