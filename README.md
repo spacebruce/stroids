@@ -7,6 +7,8 @@ If you want to run it at a decent framerate, use my fork of the arduboy library 
 
 ## Controls
 
+(Think Gameboy layout)
+**Gameplay**
 | **Button** | **Action** |
 |------------|------------|
 | UP | Move |
@@ -14,8 +16,11 @@ If you want to run it at a decent framerate, use my fork of the arduboy library 
 | DOWN | Warp |
 | B (Left) | Pause & Unpause |
 | A (Right) | Shoot |
-
-(Think Gameboy layout)
+**Menu**
+| **Button** | **Action** |
+|------------|------------|
+| B (Left) | Start |
+| A (Right) | Toggle Debug |
 
 ## Todo List
 

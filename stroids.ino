@@ -14,6 +14,7 @@ enum class State : char
 };
 State state = State::Title;
 
+bool debugShow = false;
 unsigned long highscore = 0;
 unsigned long score = 0;
 int lives = 4;
@@ -102,6 +103,10 @@ void stateMenu()
     asteroidInit();
     shotInit();
   }
+  if (gb.pushed(BTN_B))
+  {
+    debugShow = !debugShow;
+  }
   gb.fillScreen(0);
   gb.fillRect(0,0,128,32,1);
   gb.drawBitmapSlow(0,0,sprLogo,0);
@@ -111,6 +116,12 @@ void stateMenu()
   gb.setCursor(4,56);
   sprintf(text, "TOP SCORE : %08lu", highscore); //sprintf is weird.
   gb.print(text);
+
+  if (debugShow)
+  {
+    gb.setCursor(0,48);
+    gb.print("Debug on");
+  }
   
   gb.display();
 };
@@ -212,8 +223,8 @@ void playerStep()
   if (gb.pressed(BTN_U))
   {
     int speed = 1.5;  //todo : velocity
-    playerX += gb.lengthdirX(speed,playerdir);
-    playerY += gb.lengthdirY(speed,playerdir);
+    playerX += gb.lengthdirX(speed,(float)playerdir);
+    playerY += gb.lengthdirY(speed,(float)playerdir);
 
     //modulo is for losers
     if (playerX>128)  playerX = 0;
@@ -406,10 +417,13 @@ void hudDraw()
   gb.printf("%s",hud,score);
   */
   char text[8];
-  
-  gb.setCursor(0,0);
-  sprintf(text, "%03dCPU", gb.cpuLoad());
-  gb.print(text);
+
+  if(debugShow == true)
+  {
+    gb.setCursor(0,0);
+    sprintf(text, "%03dCPU", gb.cpuLoad());
+    gb.print(text);
+  }
   
   gb.setCursor(0,56);
   sprintf(text, "%08lu", score); //sprintf is weird.
