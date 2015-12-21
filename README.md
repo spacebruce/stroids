@@ -5,9 +5,8 @@ A simple Asteroids clone for the Arduboy.
 
 If you want to run it at a decent framerate, use my fork of the arduboy library or replace your Arduboy.cpp fillScreen() function with mine.
 
-## Controls
+## Controls 
 
-(Think Gameboy layout)
 **Gameplay**
 
 | **Button** | **Action** |
