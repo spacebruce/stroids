@@ -23,18 +23,16 @@ float playerdir;
 byte playersize = 4;
 byte playerBlink = 0;
 
-byte nothing=0; //wow
-
 #define starNumber 32
 byte starx[starNumber];
 byte stary[starNumber];
 
 #define stroidNumber 32
+float stroidSpeed = 0.5;
 float stroidX[stroidNumber];
 float stroidY[stroidNumber];
 byte stroidSize[stroidNumber];
-float stroidSpeed[stroidNumber];
-byte stroidDir[stroidNumber];
+float stroidDir[stroidNumber];
 bool stroidActive[stroidNumber];
 
 #define shotNumber 8
@@ -84,8 +82,8 @@ void stateIntro()
 
 /////Menu
 struct MenuType {
-  byte selected = 0;
-  byte screen = 0;
+  byte selected : 4;
+  byte screen : 2;
 }; MenuType menu;
 
 void initMenu()
@@ -144,7 +142,7 @@ void asteroidInit()
     stroidX[i] = random(1)*128;
     stroidY[i] = random(1)*64;
     stroidDir[i] = random(2*pi);
-    stroidSpeed[i] = 0.5;
+    //stroidSpeed[i] = 0.5;
     stroidActive[i] = true;
     stroidSize[i] = 6;
   };
@@ -161,8 +159,8 @@ void asteroidStep()
   {
     if (stroidActive[i])
     {
-      stroidX[i] += gb.lengthdirX(stroidSpeed[i],stroidDir[i]);
-      stroidY[i] += gb.lengthdirY(stroidSpeed[i],stroidDir[i]);
+      stroidX[i] += gb.lengthdirX(stroidSpeed,stroidDir[i]);
+      stroidY[i] += gb.lengthdirY(stroidSpeed,stroidDir[i]);
 
       //loop offscreen
       if (stroidX[i]>128)  stroidX[i] = 0;
@@ -365,18 +363,19 @@ void shotAsteroid()
           {
             bool done=false;
             byte num = 2; //makes 2 chunks
-            float dir = shotDir[s] + pi;
+            float dir = shotDir[s] + (0.5*pi);
             byte m=0;
             while(!done)  //loops searching for free asteroid slots
             {
               if(stroidActive[m] == false)
               {
+                int newDir = dir+(num*pi);
                 stroidActive[m] = true;
-                stroidX[m] = stroidX[a]+gb.lengthdirX(msize,dir);
-                stroidY[m] = stroidY[a]+gb.lengthdirY(msize,dir);
+                stroidX[m] = stroidX[a]+gb.lengthdirX(msize,newDir);
+                stroidY[m] = stroidY[a]+gb.lengthdirY(msize,newDir);
                 stroidSize[m] = msize;
-                stroidSpeed[m] = stroidSpeed[a];
-                stroidDir[m] = dir+(num*pi);
+                //stroidSpeed[m] = stroidSpeed[a];
+                stroidDir[m] = newDir;
                 num--;
               }
               m++;
