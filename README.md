@@ -31,5 +31,4 @@ If you want to run it at a decent framerate, use my fork of the arduboy library 
 - [ ] Add player momentum
 - [ ] Add highscore table
 - [ ] Add killscreen
-- [ ] Add Logo
 - [ ] Add Menu

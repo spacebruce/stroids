@@ -4,7 +4,7 @@
 #include "art.h"
 GameCore gb;
 
-/////State 
+// State
 enum class State : char
 {
   Title = 0,
@@ -68,7 +68,7 @@ void statePause();
 void setup();
 void loop();
 
-/////Intro
+// Intro
 void stateIntro()
 {
   gb.clearDisplay();
@@ -82,7 +82,7 @@ void stateIntro()
   initMenu(); state = State::Menu;
 }
 
-/////Menu
+// Menu
 struct MenuType {
   byte selected;
   byte screen;
@@ -97,7 +97,7 @@ void initMenu()
 }
 void stateMenu()
 {
-  //simple placeholder for the moment
+  // Simple placeholder for the moment
   if (gb.pushed(BTN_A))
   {
     state = State::Game;
@@ -118,7 +118,7 @@ void stateMenu()
   gb.drawBitmapSlow(0,0,sprLogoMask,0);
   gb.drawBitmapSlow(0,0,sprLogo,1);
 
-  ///top score
+  // Top score
   char text[24];
   gb.setCursor(4,56);
   sprintf(text, strHighscore , highscore); //sprintf is weird.
@@ -133,7 +133,7 @@ void stateMenu()
   gb.display();
 };
 
-////background
+// Background
 void backInit()
 {
   for(byte i=0; i<starNumber; i++)
@@ -153,7 +153,7 @@ void backDraw()
 ////'Stroids
 void asteroidInit()
 {
-  const int stroidStartNumber = 3;  //how many to start each round with
+  const int stroidStartNumber = 3;  // How many to start each round with
   byte i;
   for (byte i = 0; i < stroidStartNumber; ++i)
   {
@@ -164,15 +164,15 @@ void asteroidInit()
     stroidActive[i] = true;
     stroidSize[i] = 6;
   };
-  for(byte i = stroidStartNumber; i<stroidNumber; ++i) //deactivates rest
+  for(byte i = stroidStartNumber; i<stroidNumber; ++i) // Deactivates rest
   {
     stroidActive[i] = false;
   }
 };
 void asteroidStep()
 {
-  //loops 'stroids and adds speed/direction to position
-  byte numActive = 0; //counts how many are active
+  // Loops 'stroids and adds speed/direction to position
+  byte numActive = 0; // Counts how many are active
   for (byte i=0; i<stroidNumber; i+=1)
   {
     if (stroidActive[i])
@@ -180,7 +180,7 @@ void asteroidStep()
       stroidX[i] += gb.lengthdirX(stroidSpeed,stroidDir[i]);
       stroidY[i] += gb.lengthdirY(stroidSpeed,stroidDir[i]);
 
-      //loop offscreen
+      // Loop offscreen
       if (stroidX[i]>128)  stroidX[i] = 0;
       if (stroidX[i]<0)    stroidX[i] = 128;
       if (stroidY[i]>64)   stroidY[i] = 0;
@@ -190,7 +190,7 @@ void asteroidStep()
     }
   };
 
-  if (numActive==0) //if all asteroids are gone, start next round
+  if (numActive==0) // If all asteroids are gone, start next round
   {
     asteroidInit();
   }
@@ -200,10 +200,10 @@ void asteroidDraw()
   for (byte i=0; i<stroidNumber; i+=1)
   {
     if (stroidActive[i])
-      gb.drawCircle(stroidX[i],stroidY[i],stroidSize[i],1); //todo : make actual asteroid graphics
+      gb.drawCircle(stroidX[i],stroidY[i],stroidSize[i],1); // Todo : make actual asteroid graphics
   };
 }
-////player
+// Player
 void playerInit()
 {
   score = 0;
@@ -229,11 +229,11 @@ void playerStep()
   };
   if (gb.pressed(BTN_U))
   {
-    int speed = 1.5;  //todo : velocity
+    int speed = 1.5;  // Todo : velocity
     playerX += gb.lengthdirX(speed,(float)playerdir);
     playerY += gb.lengthdirY(speed,(float)playerdir);
 
-    //modulo is for losers
+    // Modulo is for losers
     if (playerX>128)  playerX = 0;
     if (playerX<0)    playerX = 128;
     if (playerY>64)   playerY = 0;
@@ -246,13 +246,13 @@ void playerStep()
     playerY = random(64);
   }
   
-  //shoots
+  // Shoots
   if (gb.pushed(BTN_B))
   {
     shotAdd(playerX,playerY,playerdir);
   }
   
-  //collision/invincible checks
+  // Collision/invincible checks
   if (playerBlink > 0)
   {
     playerBlink--;
@@ -261,11 +261,11 @@ void playerStep()
   {
     playerCollision();
   }
-  ///collisions
+  // Collisions
 
   if (lives == 0)
   {
-    state = State::Menu;  //to-do : go to gameover screen
+    state = State::Menu;  // To-do : go to gameover screen
     if (score>highscore)
     {
       highscore = score;
@@ -287,24 +287,24 @@ void playerCollision()
 }
 void playerDraw()
 { 
-  if(((playerBlink / 6) & 1) == 0) //if visible on this frame
+  if(((playerBlink / 6) & 1) == 0) // If visible on this frame
   {
     int x1,y1,x2,y2,x3,y3;
     //reminder that the arduino library uses radians! Not degrees! You idiot! You wasted HOURS working that out!
-    x1 = playerX + gb.lengthdirX(playersize,playerdir);     //tip
+    x1 = playerX + gb.lengthdirX(playersize,playerdir);     // Tip
     y1 = playerY + gb.lengthdirY(playersize,playerdir);
-    x2 = playerX + gb.lengthdirX(playersize,(playerdir+pi)+(0.3*pi));   //left(?) wing
+    x2 = playerX + gb.lengthdirX(playersize,(playerdir+pi)+(0.3*pi));   // Left(?) wing
     y2 = playerY + gb.lengthdirY(playersize,(playerdir+pi)+(0.3*pi));
-    x3 = playerX + gb.lengthdirX(playersize,(playerdir+pi)-(0.3*pi));   //right(?) wing
+    x3 = playerX + gb.lengthdirX(playersize,(playerdir+pi)-(0.3*pi));   // Right(?) wing
     y3 = playerY + gb.lengthdirY(playersize,(playerdir+pi)-(0.3*pi));
   
-    gb.drawLine(x1,y1,x2,y2,1); //tip to wings
+    gb.drawLine(x1,y1,x2,y2,1); // Tip to wings
     gb.drawLine(x1,y1,x3,y3,1);
-    gb.drawLine(x2,y2,playerX,playerY,1); //tips to center
+    gb.drawLine(x2,y2,playerX,playerY,1); // Tips to center
     gb.drawLine(x3,y3,playerX,playerY,1);
   };
 };
-////shooting
+// Shooting
 void shotInit()
 {
   for(byte i=0; i<shotNumber; i++)
@@ -325,7 +325,7 @@ void shotStep()
       shotX[i] += gb.lengthdirX(shotSpeed,shotDir[i]);
       shotY[i] += gb.lengthdirY(shotSpeed,shotDir[i]);
 
-      //delete if out of bounds
+      // Delete if out of bounds
       if ((shotX[i] < 0) or (shotY[i] < 0) or (shotX[i] > 128) or (shotY[i] > 64))
       {
         shotActive[i] = false;
@@ -362,7 +362,7 @@ bool shotAdd(int x,int y,float dir)
 
 void shotAsteroid()
 {
-  //loops every active shot and every active asteroid and checks for incircle collisions
+  // Loops every active shot and every active asteroid and checks for incircle collisions
   for(byte s=0; s<shotNumber; s++)
   {
     if (shotActive[s] == true)
@@ -374,16 +374,16 @@ void shotAsteroid()
           shotActive[s] = false;
           stroidActive[a] = false;
 
-          score += stroidSize[a]*100; //todo : better score calculation
+          score += stroidSize[a]*100; // Todo : better score calculation
 
-          int msize = stroidSize[a]-2;  //chunk sizes
+          int msize = stroidSize[a]-2;  // Chunk sizes
           if (msize != 0)
           {
             bool done=false;
-            byte num = 2; //makes 2 chunks
+            byte num = 2; // Makes 2 chunks
             float dir = shotDir[s] + (0.5*pi);
             byte m=0;
-            while(!done)  //loops searching for free asteroid slots
+            while(!done)  // Loops searching for free asteroid slots
             {
               if(stroidActive[m] == false)
               {
@@ -398,7 +398,7 @@ void shotAsteroid()
               }
               m++;
               
-              if ((num == 0) or (m>32)) //break if satisfied or cannot continue
+              if ((num == 0) or (m>32)) // Break if satisfied or cannot continue
               {
                 done = true;
               }
@@ -413,7 +413,7 @@ void shotAsteroid()
 void hudDraw()
 {
   
-  gb.fillRect(128-(min(lives-1,8)*8),56,128,64,0);  //background for lives counter
+  gb.fillRect(128-(min(lives-1,8)*8),56,128,64,0);  // Background for lives counter
   for(byte i=0; i<=(min(lives-1,8)); i++)
   {
     gb.drawBitmap(128-(i*8),56,sprLives,1);
@@ -437,7 +437,7 @@ void hudDraw()
   gb.print(text);
 };
 
-/////Game
+// Game
 void stateGame()
 {
   if (gb.pushed(BTN_A))
@@ -461,7 +461,7 @@ void stateGameDraw()
   shotDraw();
   hudDraw();
 }
-////pause
+// Pause
 void statePause()
 {
   if (gb.pushed(BTN_A))
@@ -470,15 +470,15 @@ void statePause()
   }
   stateGameDraw();
   
-  if((gb.frameCount()/12)%2)  //flicker the text
+  if((gb.frameCount()/12)%2)  // Flicker the text
   {
-    gb.setCursor(44,28);  //seems to be about the middle of the screen
+    gb.setCursor(44,28);  // Seems to be about the middle of the screen
     gb.print(strPaused);
   }
   gb.display();
 }
 
-///the good bits
+// The good bits
 void setup()
 {
   gb.setup();
@@ -496,4 +496,3 @@ void loop()
     case State::Game:  { stateGame(); }; break;
     case State::Pause: { statePause(); }; break;
   }
-}
