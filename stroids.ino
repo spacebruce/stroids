@@ -286,8 +286,8 @@ void playerCollision()
   }
 }
 void playerDraw()
-{
-  if (((playerBlink/4)%2) == false) //if visible on this frame
+{ 
+  if(((playerBlink / 6) & 1) == 0) //if visible on this frame
   {
     int x1,y1,x2,y2,x3,y3;
     //reminder that the arduino library uses radians! Not degrees! You idiot! You wasted HOURS working that out!
