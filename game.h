@@ -81,6 +81,10 @@ struct GameCore {
     arduboy.drawCircle(x + qx, y + qy, r, c);
   }
   inline void setCursor(int x, int y) { arduboy.setCursor(x, y); }
+<<<<<<< HEAD
   inline void print(const char* text) { arduboy.print(text); }
+=======
+  inline void print(const char * text) { arduboy.print(text); }
+>>>>>>> origin/master
 };
 
