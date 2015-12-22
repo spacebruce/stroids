@@ -48,6 +48,7 @@ void stateIntro();
 void initMenu();
 void stateMenu();
 void backInit();
+void backDraw();
 void asteroidInit();
 void asteroidStep();
 void asteroidDraw();
@@ -72,7 +73,7 @@ void stateIntro()
 {
   gb.clearDisplay();
   gb.setCursor(46,28);
-  gb.print("ARDUBOY");
+  gb.print(strArduboy);
   gb.display();
 //  gb.tunes.tone(987, 160);
   delay(160);
@@ -83,14 +84,16 @@ void stateIntro()
 
 /////Menu
 struct MenuType {
-  byte selected : 4;
-  byte screen : 2;
+  byte selected;
+  byte screen;
 }; MenuType menu;
 
 void initMenu()
 {
   menu.selected = 0;
   menu.screen = 0;
+  backInit();
+  asteroidInit();
 }
 void stateMenu()
 {
@@ -99,7 +102,6 @@ void stateMenu()
   {
     state = State::Game;
     playerInit();
-    backInit();
     asteroidInit();
     shotInit();
   }
@@ -108,19 +110,24 @@ void stateMenu()
     debugShow = !debugShow;
   }
   gb.fillScreen(0);
-  gb.fillRect(0,0,128,32,1);
-  gb.drawBitmapSlow(0,0,sprLogo,0);
+
+  asteroidStep();
+  backDraw();
+  asteroidDraw();
+
+  gb.drawBitmapSlow(0,0,sprLogoMask,0);
+  gb.drawBitmapSlow(0,0,sprLogo,1);
 
   ///top score
   char text[24];
   gb.setCursor(4,56);
-  sprintf(text, "TOP SCORE : %08lu", highscore); //sprintf is weird.
+  sprintf(text, strHighscore , highscore); //sprintf is weird.
   gb.print(text);
 
   if (debugShow)
   {
     gb.setCursor(0,48);
-    gb.print("Debug on");
+    gb.print(strDebug);
   }
   
   gb.display();
@@ -148,7 +155,7 @@ void asteroidInit()
 {
   const int stroidStartNumber = 3;  //how many to start each round with
   byte i;
-  for (i=0; i<stroidStartNumber; i+=1)
+  for (byte i = 0; i < stroidStartNumber; ++i)
   {
     stroidX[i] = random(1)*128;
     stroidY[i] = random(1)*64;
@@ -157,7 +164,7 @@ void asteroidInit()
     stroidActive[i] = true;
     stroidSize[i] = 6;
   };
-  for(i; i<stroidNumber; i++) //deactivates rest
+  for(byte i = stroidStartNumber; i<stroidNumber; ++i) //deactivates rest
   {
     stroidActive[i] = false;
   }
@@ -421,12 +428,12 @@ void hudDraw()
   if(debugShow == true)
   {
     gb.setCursor(0,0);
-    sprintf(text, "%03dCPU", gb.cpuLoad());
+    sprintf(text, strCPU, gb.cpuLoad());
     gb.print(text);
   }
   
   gb.setCursor(0,56);
-  sprintf(text, "%08lu", score); //sprintf is weird.
+  sprintf(text, strScore , score); //sprintf is weird.
   gb.print(text);
 };
 
@@ -466,7 +473,7 @@ void statePause()
   if((gb.frameCount()/12)%2)  //flicker the text
   {
     gb.setCursor(44,28);  //seems to be about the middle of the screen
-    gb.print("PAUSED!");
+    gb.print(strPaused);
   }
   gb.display();
 }

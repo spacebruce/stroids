@@ -38,7 +38,7 @@ struct GameCore {
     return (nowInput & button) != 0 && (prevInput & button) == 0;
   }
   bool released(byte button) const {
-    return (nowInput & button) == 0 && (prevInput & button) == 1;
+    return (nowInput & button) == 0 && (prevInput & button) != 0;
   }
 
   ///functions nicked from gamemaker. they're handyish.
@@ -81,6 +81,6 @@ struct GameCore {
     arduboy.drawCircle(x + qx, y + qy, r, c);
   }
   inline void setCursor(int x, int y) { arduboy.setCursor(x, y); }
-  inline void print(char* text) { arduboy.print(text); }
+  inline void print(const char* text) { arduboy.print(text); }
 };
 
