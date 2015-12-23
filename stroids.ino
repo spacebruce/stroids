@@ -18,10 +18,12 @@ bool debugShow = false;
 unsigned long highscore = 0;
 unsigned long score = 0;
 int lives = 4;
-float playerX;
-float playerY;
-float playerdir;
-byte playersize = 4;
+#define SPACEFRICTION 0.975
+#define playerAcceleration 0.1
+#define playerSpeedCap 2
+#define playerSize 4
+float playerX,playerY,playerDir;
+float playerXSpeed,playerYSpeed; //vec2d :D
 byte playerBlink = 0;
 
 #define starNumber 32
@@ -155,25 +157,26 @@ void asteroidInit()
 {
   const int stroidStartNumber = 3;  // How many to start each round with
   byte i;
-  for (byte i = 0; i < stroidStartNumber; ++i)
+
+  for(i = 0; i<stroidNumber; i++) // 
   {
+    stroidActive[i] = false;
+  }
+  for (i = 0; i < stroidStartNumber; i++)
+  {
+    stroidActive[i] = true;
     stroidX[i] = random(1)*128;
     stroidY[i] = random(1)*64;
     stroidDir[i] = random(2*pi);
     //stroidSpeed[i] = 0.5;
-    stroidActive[i] = true;
     stroidSize[i] = 6;
   };
-  for(byte i = stroidStartNumber; i<stroidNumber; ++i) // Deactivates rest
-  {
-    stroidActive[i] = false;
-  }
 };
 void asteroidStep()
 {
   // Loops 'stroids and adds speed/direction to position
   byte numActive = 0; // Counts how many are active
-  for (byte i=0; i<stroidNumber; i+=1)
+  for (byte i=0; i<stroidNumber; i++)
   {
     if (stroidActive[i])
     {
@@ -197,7 +200,7 @@ void asteroidStep()
 };
 void asteroidDraw()
 {
-  for (byte i=0; i<stroidNumber; i+=1)
+  for (byte i=0; i<stroidNumber; i++)
   {
     if (stroidActive[i])
       gb.drawCircle(stroidX[i],stroidY[i],stroidSize[i],1); // Todo : make actual asteroid graphics
@@ -214,30 +217,39 @@ void playerReset()
 {
   playerX = 64;
   playerY = 32;
-  playerdir = pi*1.5;
+  playerXSpeed = 0;
+  playerYSpeed = 0;
+  playerDir = pi*1.5;
   playerBlink = 120;  //2 seconds of invuln.
 }
 void playerStep()
 {
   if (gb.pressed(BTN_L))
   {
-    playerdir -= 0.15;
+    playerDir -= 0.15;
   };
   if (gb.pressed(BTN_R))
   {
-    playerdir += 0.15;
+    playerDir += 0.15;
   };
   if (gb.pressed(BTN_U))
   {
-    int speed = 1.5;  // Todo : velocity
-    playerX += gb.lengthdirX(speed,(float)playerdir);
-    playerY += gb.lengthdirY(speed,(float)playerdir);
+    playerXSpeed += gb.lengthdirX(playerAcceleration,playerDir);
+    playerYSpeed += gb.lengthdirY(playerAcceleration,playerDir);
 
-    // Modulo is for losers
-    if (playerX>128)  playerX = 0;
-    if (playerX<0)    playerX = 128;
-    if (playerY>64)   playerY = 0;
-    if (playerY<0)    playerY = 64;
+    if (playerXSpeed > 0)
+      playerXSpeed = min(playerXSpeed,playerSpeedCap);
+    if (playerYSpeed > 0)
+      playerYSpeed = min(playerYSpeed,playerSpeedCap);
+    if (playerXSpeed < 0)
+      playerXSpeed = max(playerXSpeed,-playerSpeedCap);
+    if (playerYSpeed < 0)
+      playerYSpeed = max(playerYSpeed,-playerSpeedCap);
+  }
+  else
+  {
+    if (abs(playerXSpeed) > 0)  { playerXSpeed *= SPACEFRICTION; }
+    if (abs(playerYSpeed) > 0)  { playerYSpeed *= SPACEFRICTION; }
   }
   if (gb.pushed(BTN_D))
   {
@@ -246,10 +258,19 @@ void playerStep()
     playerY = random(64);
   }
   
+  playerX += playerXSpeed;
+  playerY += playerYSpeed;
+
+  // Modulo is for losers
+  if (playerX>128)  playerX = 0;
+  if (playerX<0)    playerX = 128;
+  if (playerY>64)   playerY = 0;
+  if (playerY<0)    playerY = 64;
+
   // Shoots
   if (gb.pushed(BTN_B))
   {
-    shotAdd(playerX,playerY,playerdir);
+    shotAdd(playerX,playerY,playerDir);
   }
   
   // Collision/invincible checks
@@ -287,16 +308,16 @@ void playerCollision()
 }
 void playerDraw()
 { 
-  if(((playerBlink / 6) & 1) == 0) // If visible on this frame
+  if(((playerBlink / 12) & 1) == 0) // If visible on this frame
   {
     int x1,y1,x2,y2,x3,y3;
     //reminder that the arduino library uses radians! Not degrees! You idiot! You wasted HOURS working that out!
-    x1 = playerX + gb.lengthdirX(playersize,playerdir);     // Tip
-    y1 = playerY + gb.lengthdirY(playersize,playerdir);
-    x2 = playerX + gb.lengthdirX(playersize,(playerdir+pi)+(0.3*pi));   // Left(?) wing
-    y2 = playerY + gb.lengthdirY(playersize,(playerdir+pi)+(0.3*pi));
-    x3 = playerX + gb.lengthdirX(playersize,(playerdir+pi)-(0.3*pi));   // Right(?) wing
-    y3 = playerY + gb.lengthdirY(playersize,(playerdir+pi)-(0.3*pi));
+    x1 = playerX + gb.lengthdirX(playerSize,playerDir);     // Tip
+    y1 = playerY + gb.lengthdirY(playerSize,playerDir);
+    x2 = playerX + gb.lengthdirX(playerSize,(playerDir+pi)+(0.3*pi));   // Left(?) wing
+    y2 = playerY + gb.lengthdirY(playerSize,(playerDir+pi)+(0.3*pi));
+    x3 = playerX + gb.lengthdirX(playerSize,(playerDir+pi)-(0.3*pi));   // Right(?) wing
+    y3 = playerY + gb.lengthdirY(playerSize,(playerDir+pi)-(0.3*pi));
   
     gb.drawLine(x1,y1,x2,y2,1); // Tip to wings
     gb.drawLine(x1,y1,x3,y3,1);
@@ -496,3 +517,4 @@ void loop()
     case State::Game:  { stateGame(); }; break;
     case State::Pause: { statePause(); }; break;
   }
+}
