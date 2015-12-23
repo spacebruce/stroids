@@ -10,7 +10,8 @@ enum class State : char
   Title = 0,
   Menu = 1,
   Game = 2,
-  Pause = 3
+  Pause = 3,
+  End = 4
 };
 State state = State::Title;
 
@@ -22,8 +23,9 @@ int lives = 4;
 #define playerAcceleration 0.1
 #define playerSpeedCap 2
 #define playerSize 4
-float playerX,playerY,playerDir;
+float playerX,playerY
 float playerXSpeed,playerYSpeed; //vec2d :D
+float playerDir;
 byte playerBlink = 0;
 
 #define starNumber 32
@@ -165,8 +167,8 @@ void asteroidInit()
   for (i = 0; i < stroidStartNumber; i++)
   {
     stroidActive[i] = true;
-    stroidX[i] = random(1)*128;
-    stroidY[i] = random(1)*64;
+    stroidX[i] = random(1)*127;
+    stroidY[i] = random(1)*63;
     stroidDir[i] = random(2*pi);
     //stroidSpeed[i] = 0.5;
     stroidSize[i] = 6;
@@ -184,10 +186,10 @@ void asteroidStep()
       stroidY[i] += gb.lengthdirY(stroidSpeed,stroidDir[i]);
 
       // Loop offscreen
-      if (stroidX[i]>128)  stroidX[i] = 0;
-      if (stroidX[i]<0)    stroidX[i] = 128;
-      if (stroidY[i]>64)   stroidY[i] = 0;
-      if (stroidY[i]<0)    stroidY[i] = 64;
+      if (stroidX[i]>127)  stroidX[i] = 0;
+      if (stroidX[i]<0)    stroidX[i] = 127;
+      if (stroidY[i]>63)   stroidY[i] = 0;
+      if (stroidY[i]<0)    stroidY[i] = 63;
       
       numActive++;
     }
@@ -215,8 +217,8 @@ void playerInit()
 }
 void playerReset()
 {
-  playerX = 64;
-  playerY = 32;
+  playerX = 63;
+  playerY = 31;
   playerXSpeed = 0;
   playerYSpeed = 0;
   playerDir = pi*1.5;
@@ -262,10 +264,10 @@ void playerStep()
   playerY += playerYSpeed;
 
   // Modulo is for losers
-  if (playerX>128)  playerX = 0;
-  if (playerX<0)    playerX = 128;
-  if (playerY>64)   playerY = 0;
-  if (playerY<0)    playerY = 64;
+  if (playerX>127)  playerX = 0;
+  if (playerX<0)    playerX = 127;
+  if (playerY>63)   playerY = 0;
+  if (playerY<0)    playerY = 63;
 
   // Shoots
   if (gb.pushed(BTN_B))
@@ -498,6 +500,27 @@ void statePause()
   }
   gb.display();
 }
+// KillScreen
+void stateEnd()
+{
+  gb.fillScreen(0);
+
+  asteroidStep();
+  backDraw();
+  asteroidDraw();
+
+  gb.fillRect(8,8,120,56,0);
+  gb.drawLine(8,8,120,8,1);
+  gb.drawLine(8,56,120,56,1);
+  gb.drawLine(8,8,8,56,1);
+  gb.drawLine(120,8,120,56,1);
+
+  gb.display();
+}
+void endInit()
+{
+
+}
 
 // The good bits
 void setup()
@@ -512,9 +535,10 @@ void loop()
   
   switch(state)
   {
-    case State::Title: { stateIntro();}; break;
-    case State::Menu:  { stateMenu(); }; break;
-    case State::Game:  { stateGame(); }; break;
+    case State::Title: { stateIntro(); }; break;
+    case State::Menu:  { stateMenu();  }; break;
+    case State::Game:  { stateGame();  }; break;
     case State::Pause: { statePause(); }; break;
+    case State::End:   { stateEnd();   }; break;
   }
 }
