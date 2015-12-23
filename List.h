@@ -145,7 +145,7 @@ const T & List<T>::operator [] (int index) const
 }
 
 template<typename T>
-List<T> & operator=(const List<T> & other)
+List<T> & List<T>::operator=(const List<T> & other)
 {
 	if(this != &other)
 	{
@@ -167,7 +167,7 @@ List<T> & operator=(const List<T> & other)
 }
    	
 template<typename T>
-List<T> & operator=(List<T> && other)
+List<T> & List<T>::operator=(List<T> && other)
 {
 	if(this != &other)
 	{
