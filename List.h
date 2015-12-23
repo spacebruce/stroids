@@ -13,6 +13,8 @@ private:
 public:
 	List(void);
 	List(int count);
+	List(const List & other);
+	List(List<T> && other);
 
 	~List(void);
 
@@ -22,10 +24,12 @@ public:
 	void Add(const T & item);
 	bool Remove(int index);
 	void Clear(void);
-
 	T & operator [] (int index);
 	const T & operator [] (int index) const;
 
+   	List<T> & operator=(const List<T> & other);
+   	List<T> & operator=(List<T> && other);
+   	
 private:
 	void EnsureCapacity(int min);
 };
@@ -41,6 +45,31 @@ List<T>::List(int count)
 	this->start = (T*)malloc(sizeof(T) * count);
 	this->next = this->start;
 	this->end = this->start + count;
+}
+
+template<typename T>
+List<T>::List(const List & other)
+{
+	if(this->start != nullptr)
+	{
+		free(this->start);
+	}
+	
+	this->start = (T*)malloc(sizeof(T) * other.GetCount());
+	this->next = this->start + other.GetCount();
+	this->end = this->start + other.GetCapacity();
+}
+
+template<typename T>
+List<T>::List(List && other)
+{
+	this->start = other.start;
+	this->next = other.next;
+	this->end = other.end;
+	
+	other.start = nullptr;
+	other.next = nullptr;
+	other.end = nullptr;
 }
 
 template<typename T>
@@ -116,9 +145,52 @@ const T & List<T>::operator [] (int index) const
 }
 
 template<typename T>
+List<T> & operator=(const List<T> & other)
+{
+	if(this != &other)
+	{
+		if(this->start != nullptr)
+		{
+			free(this->start);
+		}
+		
+		this->start = (T*)malloc(sizeof(T) * other.GetCount());
+		this->next = this->start;
+		this->end = this->start + other.GetCount();
+		
+		for (T * src = this->start; src != this->next;)
+		{
+			*(this->next++) = *(src++);
+		}
+	}
+	return *this;
+}
+   	
+template<typename T>
+List<T> & operator=(List<T> && other)
+{
+	if(this != &other)
+	{
+		if(this->start != nullptr)
+		{
+			free(this->start);
+		}
+		
+		this->start = other.start;
+		this->next = other.next;
+		this->end = other.end;
+		
+		other.start = nullptr;
+		other.next = nullptr;
+		other.end = nullptr;
+	}
+	return *this;
+}
+
+template<typename T>
 void List<T>::EnsureCapacity(int min)
 {
-	if (this->GetCapacity() > min)
+	if (this->GetCapacity() >= min)
 	{
 		return;
 	}
