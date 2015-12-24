@@ -7,7 +7,7 @@ public:
 	float Y;
 
 public:
-	Vector2();
+	Vector2(void);
 	Vector2(float x, float y);
 
 	inline float Magnitude(void) const;
@@ -20,8 +20,8 @@ public:
 	inline friend bool operator ==(const Vector2 & left, const Vector2 & right);
 	inline friend bool operator !=(const Vector2 & left, const Vector2 & right);
 
-	inline friend Vector2 operator +(Vector2 left, const Vector2 &right) { return left += right; }
-	inline friend Vector2 operator -(Vector2 left, const Vector2 &right) { return left -= right; }
-	inline friend Vector2 operator *(Vector2 left, const float right) { return left *= right; }
-	inline friend Vector2 operator *(const float left, Vector2 right) { return right *= left; }
+	inline friend Vector2 operator +(Vector2 left, const Vector2 &right);
+	inline friend Vector2 operator -(Vector2 left, const Vector2 &right);
+	inline friend Vector2 operator *(Vector2 left, const float right);
+	inline friend Vector2 operator *(const float left, Vector2 right);
 };
