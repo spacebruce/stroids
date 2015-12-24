@@ -26,18 +26,21 @@ Vector2 & Vector2::operator+=(const Vector2 & other)
 {
 	this->X += other.X;
 	this->Y += other.Y;
+	return *this;
 }
 
 Vector2 & Vector2::operator-=(const Vector2 & other)
 {
 	this->X -= other.X;
 	this->Y -= other.Y;
+	return *this;
 }
 
 Vector2 & Vector2::operator*=(const float & value)
 {
 	this->X *= value;
 	this->Y *= value;
+	return *this;
 }
 
 bool operator==(const Vector2 & left, const Vector2 & right)
