@@ -1,7 +1,8 @@
 #include <SPI.h>
 #include <EEPROM.h>
-#include "game.h"
-#include "art.h"
+#include "Game.h"
+#include "Art.h"
+
 GameCore gb;
 
 // State
