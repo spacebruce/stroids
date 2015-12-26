@@ -1,5 +1,8 @@
 #pragma once
 
+// Required for malloc and free
+#include <cstdlib>
+
 template<typename T>
 class List
 {
