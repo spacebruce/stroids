@@ -1,9 +1,9 @@
 #pragma once
 
 // Required for malloc and free
-#include <cstdlib>
+#include <cstdlib> 
 
-template<typename T>
+template <typename T> 
 class List
 {
 private:
@@ -30,27 +30,27 @@ public:
 	T & operator [] (int index);
 	const T & operator [] (int index) const;
 
-   	List<T> & operator=(const List<T> & other);
-   	List<T> & operator=(List<T> && other);
+   	List<T> & operator = (const List<T> & other);
+   	List<T> & operator = (List<T> && other);
    	
 private:
 	void EnsureCapacity(int min);
 };
 
-template<typename T>
+template <typename T> 
 List<T>::List(void) : start(nullptr), next(nullptr), end(nullptr)
 {
 }
 
-template<typename T>
+template <typename T> 
 List<T>::List(int count)
 {
-	this->start = (T*)malloc(sizeof(T) * count);
+	this->start = (T *)malloc(sizeof(T) * count);
 	this->next = this->start;
 	this->end = this->start + count;
 }
 
-template<typename T>
+template <typename T> 
 List<T>::List(const List & other)
 {
 	if(this->start != nullptr)
@@ -58,12 +58,12 @@ List<T>::List(const List & other)
 		free(this->start);
 	}
 	
-	this->start = (T*)malloc(sizeof(T) * other.GetCount());
+	this->start = (T *)malloc(sizeof(T) * other.GetCount());
 	this->next = this->start + other.GetCount();
 	this->end = this->start + other.GetCapacity();
 }
 
-template<typename T>
+template <typename T> 
 List<T>::List(List && other)
 {
 	this->start = other.start;
@@ -75,7 +75,7 @@ List<T>::List(List && other)
 	other.end = nullptr;
 }
 
-template<typename T>
+template <typename T> 
 List<T>::~List(void)
 {
 	if (this->start != nullptr)
@@ -85,19 +85,19 @@ List<T>::~List(void)
 	}
 }
 
-template<typename T>
+template <typename T> 
 int List<T>::GetCount(void) const
 {
 	return (this->next - this->start);
 }
 
-template<typename T>
+template <typename T> 
 int List<T>::GetCapacity(void) const
 {
 	return (this->end - this->start);
 }
 
-template<typename T>
+template <typename T> 
 void List<T>::Add(const T & item)
 {
 	if (this->next == this->end)
@@ -105,11 +105,11 @@ void List<T>::Add(const T & item)
 		this->EnsureCapacity(this->GetCapacity() * 2);
 	}
 
-	*this->next = item;
+	*(this->next) = item;
 	++this->next;
 }
 
-template<typename T>
+template <typename T> 
 bool List<T>::Remove(int index)
 {
 	T * destination = this->start + index;
@@ -119,9 +119,9 @@ bool List<T>::Remove(int index)
 		return false;
 	}
 
-	while ( destination < this->next)
+	while (destination <this->next)
 	{
-		*(destination) = *(destination + 1);
+		*(destination) =  *(destination + 1);
 		++destination;
 	}
 
@@ -129,26 +129,26 @@ bool List<T>::Remove(int index)
 	return true;
 }
 
-template<typename T>
+template <typename T> 
 void List<T>::Clear(void)
 {
 	this->next = start;
 }
 
-template<typename T>
+template <typename T> 
 T & List<T>::operator [] (int index)
 {
 	return this->start[index];
 }
 
-template<typename T>
+template <typename T> 
 const T & List<T>::operator [] (int index) const
 {
 	return this->start[index];
 }
 
-template<typename T>
-List<T> & List<T>::operator=(const List<T> & other)
+template <typename T> 
+List<T> & List<T>::operator = (const List<T> & other)
 {
 	if(this != &other)
 	{
@@ -157,20 +157,20 @@ List<T> & List<T>::operator=(const List<T> & other)
 			free(this->start);
 		}
 		
-		this->start = (T*)malloc(sizeof(T) * other.GetCount());
+		this->start = (T *)malloc(sizeof(T) * other.GetCount());
 		this->next = this->start;
 		this->end = this->start + other.GetCount();
 		
 		for (T * src = this->start; src != this->next;)
 		{
-			*(this->next++) = *(src++);
+			*(this->next++) =  *(src++);
 		}
 	}
-	return *this;
+	return * this;
 }
    	
-template<typename T>
-List<T> & List<T>::operator=(List<T> && other)
+template <typename T> 
+List<T> & List<T>::operator = (List<T> && other)
 {
 	if(this != &other)
 	{
@@ -187,10 +187,10 @@ List<T> & List<T>::operator=(List<T> && other)
 		other.next = nullptr;
 		other.end = nullptr;
 	}
-	return *this;
+	return * this;
 }
 
-template<typename T>
+template <typename T> 
 void List<T>::EnsureCapacity(int min)
 {
 	if (this->GetCapacity() >= min)
@@ -204,12 +204,12 @@ void List<T>::EnsureCapacity(int min)
 		newCapacity = min;
 	}
 
-	T * newStart = (T*)malloc(sizeof(T) * newCapacity);
+	T * newStart = (T *)malloc(sizeof(T) * newCapacity);
 	T * newNext = newStart;
 
 	for (T * src = this->start; src != this->next;)
-	{
-		*(newNext++) = *(src++);
+	{ 
+		*(newNext++) =  *(src++);
 	}
 
 	if (this->start != nullptr)
