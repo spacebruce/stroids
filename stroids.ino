@@ -24,7 +24,7 @@ int lives = 4;
 #define playerAcceleration 0.1
 #define playerSpeedCap 2
 #define playerSize 4
-float playerX, playerY
+float playerX, playerY;
 float playerXSpeed, playerYSpeed; // vec2d :D
 float playerDir;
 byte playerBlink = 0;
