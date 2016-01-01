@@ -100,6 +100,7 @@ void initMenu(void)
   backInit();
   asteroidInit();
 }
+
 void stateMenu(void)
 {
   // Simple placeholder for the moment
@@ -136,7 +137,7 @@ void stateMenu(void)
   }
   
   gb.display();
-};
+}
 
 // Background
 void backInit(void)
@@ -146,14 +147,15 @@ void backInit(void)
     starx[i] = random(128);
     stary[i] = random(64);
   };
-};
+}
+
 void backDraw(void)
 {
   for(byte i = 0; i < starNumber; i++)
   {
     gb.drawPixel(starx[i], stary[i], 1);
   };
-};
+}
 
 // 'Stroids
 void asteroidInit(void)
@@ -173,8 +175,9 @@ void asteroidInit(void)
     stroidDir[i] = random(2 * pi);
     // stroidSpeed[i] = 0.5;
     stroidSize[i] = 6;
-  };
-};
+  }
+}
+
 void asteroidStep(void)
 {
   // Loops 'stroids and adds speed / direction to position
@@ -194,21 +197,23 @@ void asteroidStep(void)
       
       numActive++;
     }
-  };
+  }
 
   if (numActive == 0) // If all asteroids are gone, start next round
   {
     asteroidInit();
   }
-};
+}
+
 void asteroidDraw(void)
 {
   for (byte i = 0; i < stroidNumber; i++)
   {
     if (stroidActive[i])
       gb.drawCircle(stroidX[i], stroidY[i], stroidSize[i], 1); // Todo : make actual asteroid graphics
-  };
+  }
 }
+
 // Player
 void playerInit(void)
 {
@@ -216,6 +221,7 @@ void playerInit(void)
   lives = 5;
   playerReset();
 }
+
 void playerReset(void)
 {
   playerX = 63;
@@ -225,16 +231,17 @@ void playerReset(void)
   playerDir = pi * 1.5;
   playerBlink = 120;  // 2 seconds of invuln.
 }
+
 void playerStep(void)
 {
   if (gb.pressed(BTN_L))
   {
     playerDir -= 0.15;
-  };
+  }
   if (gb.pressed(BTN_R))
   {
     playerDir += 0.15;
-  };
+  }
   if (gb.pressed(BTN_U))
   {
     playerXSpeed += gb.lengthdirX(playerAcceleration, playerDir);
@@ -296,6 +303,7 @@ void playerStep(void)
     }
   }
 }
+
 void playerCollision(void)
 {
   // Collision is based on a single pixel at the players midpoint.Should make up for the difficulty from the small playfield.
@@ -309,6 +317,7 @@ void playerCollision(void)
     }
   }
 }
+
 void playerDraw(void)
 { 
   if(((playerBlink / 12) & 1) == 0) // If visible on this frame
@@ -326,8 +335,9 @@ void playerDraw(void)
     gb.drawLine(x1, y1, x3, y3, 1);
     gb.drawLine(x2, y2, playerX, playerY, 1); // Tips to center
     gb.drawLine(x3, y3, playerX, playerY, 1);
-  };
-};
+  }
+}
+
 // Shooting
 void shotInit(void)
 {
@@ -339,6 +349,7 @@ void shotInit(void)
     shotActive[i] = false;
   }
 }
+
 void shotStep(void)
 {
   // loops shots, updates positions based on speed and direction.
@@ -357,6 +368,7 @@ void shotStep(void)
     }
   }
 }
+
 void shotDraw(void)
 {
   for(byte i = 0; i < shotNumber; i++)
@@ -367,6 +379,7 @@ void shotDraw(void)
     }
   }
 }
+
 bool shotAdd(int x, int y, float dir)
 {
   // loops shots and inserts into the first free space it can find.
@@ -441,7 +454,7 @@ void hudDraw(void)
   for(byte i = 0; i <= (min(lives - 1, 8)); i++)
   {
     gb.drawBitmap(128 - (i * 8), 56, sprLives, 1);
-  };
+  }
 
   /*
   char hud[10];
@@ -459,7 +472,7 @@ void hudDraw(void)
   gb.setCursor(0, 56);
   sprintf(text, strScore, score); // sprintf is weird.
   gb.print(text);
-};
+}
 
 // Game
 void stateGame(void)
@@ -476,6 +489,7 @@ void stateGame(void)
   stateGameDraw();
   gb.display();
 }
+
 void stateGameDraw(void)
 {
   gb.fillScreen(0);
@@ -485,6 +499,7 @@ void stateGameDraw(void)
   shotDraw();
   hudDraw();
 }
+
 // Pause
 void statePause(void)
 {
@@ -501,6 +516,7 @@ void statePause(void)
   }
   gb.display();
 }
+
 // KillScreen
 void stateEnd(void)
 {
@@ -518,6 +534,7 @@ void stateEnd(void)
 
   gb.display();
 }
+
 void endInit(void)
 {
 
@@ -531,15 +548,15 @@ void setup(void)
 
 void loop(void)
 {
-  if(! gb.nextFrame()) { return; };
+  if(! gb.nextFrame()) { return; }
   gb.updateInput();
   
   switch(state)
   {
-    case State::Title: { stateIntro(); }; break;
-    case State::Menu:  { stateMenu();  }; break;
-    case State::Game:  { stateGame();  }; break;
-    case State::Pause: { statePause(); }; break;
-    case State::End:   { stateEnd();   }; break;
+    case State::Title: { stateIntro(); } break;
+    case State::Menu:  { stateMenu();  } break;
+    case State::Game:  { stateGame();  } break;
+    case State::Pause: { statePause(); } break;
+    case State::End:   { stateEnd();   } break;
   }
 }
