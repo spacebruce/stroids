@@ -105,7 +105,7 @@ void List<T>::Add(const T & item)
 		this->EnsureCapacity(this->GetCapacity() * 2);
 	}
 
-	 * this->next = item;
+	*(this->next) = item;
 	++this->next;
 }
 
@@ -121,7 +121,7 @@ bool List<T>::Remove(int index)
 
 	while (destination <this->next)
 	{
-	 * (destination) =  *(destination + 1);
+		*(destination) =  *(destination + 1);
 		++destination;
 	}
 
@@ -163,7 +163,7 @@ List<T> & List<T>::operator = (const List<T> & other)
 		
 		for (T * src = this->start; src != this->next;)
 		{
-	 * (this->next++) =  *(src++);
+			*(this->next++) =  *(src++);
 		}
 	}
 	return * this;
@@ -208,8 +208,8 @@ void List<T>::EnsureCapacity(int min)
 	T * newNext = newStart;
 
 	for (T * src = this->start; src != this->next;)
-	{
-	 * (newNext++) =  *(src++);
+	{ 
+		*(newNext++) =  *(src++);
 	}
 
 	if (this->start != nullptr)
