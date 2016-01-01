@@ -28,7 +28,8 @@ filter Regex-Replace
 	# Comma Spacing
 	Regex-Replace '\s*,\s*([\w\d]+)' ', $1' |
 	# General Operator Spacing
-	Regex-Replace '([^-+*/])\s*([-!+=^&|*%/]=?)\s*([^-+*/>])' '$1 $2 $3' |
+	Regex-Replace '([^-+*/])\s*([-!+=^&|%/]=?)\s*([^-+*/>])' '$1 $2 $3' |
+	Regex-Replace '([\d\w]+)\s*(\*=?)\s*([\d\w]+)' '$1 $2 $3' |
 	# Comparison Operator Spacing
 	Regex-Replace '\s*>\s*' ' > ' |
 	Regex-Replace '\s*<\s*' ' < ' |
