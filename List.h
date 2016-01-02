@@ -48,8 +48,12 @@ template <typename T>
 List<T>::List(int count)
 {
 	this->start = (T *)malloc(sizeof(T) * count);
-	this->next = this->start;
 	this->end = this->start + count;
+	this->next = this->end;
+	for(T * item = this->start; item < this->end; ++item)
+	{
+		item->T();
+	}
 }
 
 template <typename T> 
