@@ -154,7 +154,7 @@ void List<T>::Resize(int size)
 	{
 		return;
 	}
-	if(size < current)
+	else if(size < current)
 	{
 		T * item = this->start + size;
 		while(item < this->next)
@@ -164,7 +164,7 @@ void List<T>::Resize(int size)
 		}
 		this->next = this->start + size;
 	}
-	if(size > current)
+	else if(size > current)
 	{
 		T * item = this->next;
 		this->next = this->start + size;
