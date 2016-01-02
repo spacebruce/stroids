@@ -27,6 +27,8 @@ public:
 	void Add(const T & item);
 	bool Remove(int index);
 	void Clear(void);
+	void Resize(int size);
+	
 	T & operator [] (int index);
 	const T & operator [] (int index) const;
 
@@ -80,6 +82,10 @@ List<T>::~List(void)
 {
 	if (this->start != nullptr)
 	{
+		for(T * item = this->next; item >= this->start; --item)
+		{
+			item->~T();
+		}
 		free(this->start);
 		this->start = nullptr;
 	}
@@ -119,12 +125,13 @@ bool List<T>::Remove(int index)
 		return false;
 	}
 
-	while (destination <this->next)
+	while (destination < this->next)
 	{
 		*(destination) =  *(destination + 1);
 		++destination;
 	}
-
+	
+	this->next->~T();
 	--this->next;
 	return true;
 }
@@ -132,7 +139,41 @@ bool List<T>::Remove(int index)
 template <typename T> 
 void List<T>::Clear(void)
 {
-	this->next = start;
+	for(T * item = this->next; item >= this->start; --item)
+	{
+		item->~T();
+	}
+	this->next = this->start;
+}
+
+template <typename T> 
+void List<T>::Resize(int size)
+{
+	int current = this->GetCount();
+	if(size == current)
+	{
+		return;
+	}
+	else if(size < current)
+	{
+		T * item = this->start + size;
+		while(item < this->next)
+		{
+			item->~T();
+			++item;
+		}
+		this->next = this->start + size;
+	}
+	else if(size > current)
+	{
+		T * item = this->next;
+		this->next = this->start + size;
+		while(item < this->next)
+		{
+			item->T();
+			++item;
+		}
+	}
 }
 
 template <typename T> 
