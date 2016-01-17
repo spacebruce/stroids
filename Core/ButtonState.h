@@ -5,42 +5,42 @@
 class ButtonState
 {
 private:
-    const Buttons previous;
-    const Buttons current;
+	const Buttons previous;
+	const Buttons current;
   
 public:
-    inline ButtonState(Buttons current) :
+	inline ButtonState(const Buttons current) :
 		previous(), current(current)
 	{
 	}
 	
-    inline ButtonState(Buttons previous, Buttons current) :
+	inline ButtonState(const Buttons previous, const Buttons current) :
 		previous(previous), current(current)
 	{
 	}
 
-    inline Buttons GetPrevious(void) const
-    {
-        return this->previous;
-    }
+	inline Buttons GetPrevious(void) const
+	{
+		return this->previous;
+	}
 
-    inline Buttons GetCurrent(void) const
-    {
-        return this->current;
-    }
+	inline Buttons GetCurrent(void) const
+	{
+		return this->current;
+	}
 
-    inline bool IsHeld(const Buttons buttons) const
+	inline bool IsHeld(const Buttons buttons) const
 	{
 		return AllFlagsSet(this->current, buttons);
 	}
 	
-    inline bool IsPressed(const Buttons buttons) const
+	inline bool IsPressed(const Buttons buttons) const
 	{
 		return AnyFlagsClear(this->previous, buttons)
 			&& AllFlagsSet(this->current, buttons);
 	}
 	
-    inline bool IsReleased(const Buttons buttons) const
+	inline bool IsReleased(const Buttons buttons) const
 	{
 		return AllFlagsSet(this->previous, buttons)
 			&& AnyFlagsClear(this->current, buttons);
