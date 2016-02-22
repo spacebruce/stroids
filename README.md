@@ -2,8 +2,7 @@
 A simple Asteroids clone for the Arduboy.
 
 ## Sidenote
-
-If you want to run it at a decent framerate, use my fork of the arduboy library or replace your Arduboy.cpp fillScreen() function with mine.
+I'm unsure if this runs on a production Arduboy. Works flawlessly on a Devkit unit.
 
 ## Controls 
 
